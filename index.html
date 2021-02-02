@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Expense App</title>
+    <style>
+        body{
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            height:100vh;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="output"></h1>
+    <input id="inputAmt">
+    <button id="addExpenseBtn">+</button>
+    <script>
+        let totalExpense = 0;
+        const inputAmt = document.getElementById("inputAmt");
+        const btn = document.getElementById("addExpenseBtn");
+        const output = document.getElementById("output");
+        function addExpenseToTotal()
+        {
+ 
+            let input = parseInt(inputAmt.value);
+            totalExpense=totalExpense+input;
+            console.log(totalExpense);
+            output.textContent=totalExpense;
+
+        }
+        btn.addEventListener("click",addExpenseToTotal);
+    </script>
+</body>
+</html>
