@@ -16,21 +16,39 @@
 </head>
 <body>
     <h1 id="output"></h1>
-    <input id="inputAmt">
+    <input id="inputAmt" type="text">
+    <input id="inputDesc" type="text">
     <button id="addExpenseBtn">+</button>
+    <div id="list"></div>
     <script>
         let totalExpense = 0;
         const inputAmt = document.getElementById("inputAmt");
+        const inputDesc = document.getElementById("inputDesc");
         const btn = document.getElementById("addExpenseBtn");
         const output = document.getElementById("output");
+        const list = document.getElementById("list");
+        output.textContent = "Output :" + totalExpense;
+
+        let allExpenses = [];
+        
         function addExpenseToTotal()
         {
  
-            let input = parseInt(inputAmt.value);
-            totalExpense=totalExpense+input;
+            let amt = parseInt(inputAmt.value);
+            let desc = inputDesc.value;
+            let expenseItem = {};
+            let outputList = "";
+            expenseItem.amount=amt;
+            expenseItem.description=desc;
+            allExpenses.push(expenseItem);
+            totalExpense=totalExpense+amt;
             console.log(totalExpense);
-            output.textContent=totalExpense;
-
+            output.textContent="Output :" + totalExpense;
+            console.log(allExpenses);
+            allExpenses.map(expenseItem => {
+                outputList+= `<div>Amount : ${expenseItem.amount} :: Description : ${expenseItem.description}</div>`;
+            });
+            list.innerHTML=outputList;
         }
         btn.addEventListener("click",addExpenseToTotal);
     </script>
