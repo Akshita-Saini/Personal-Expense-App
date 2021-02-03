@@ -37,7 +37,7 @@
             let amt = parseInt(inputAmt.value);
             let desc = inputDesc.value;
             let expenseItem = {};
-            let outputList = "";
+    
             expenseItem.amount=amt;
             expenseItem.description=desc;
             allExpenses.push(expenseItem);
@@ -45,10 +45,12 @@
             console.log(totalExpense);
             output.textContent="Output :" + totalExpense;
             console.log(allExpenses);
-            allExpenses.map(expenseItem => {
-                outputList+= `<div>Amount : ${expenseItem.amount} :: Description : ${expenseItem.description}</div>`;
+            let outputList = allExpenses.map(expenseItem => {
+                return `<div>Amount : ${expenseItem.amount} :: Description : ${expenseItem.description}</div>`;
             });
-            list.innerHTML=outputList;
+            let joinedOutputList = outputList.join(" ");
+            console.log(joinedOutputList);
+            list.innerHTML=joinedOutputList;
         }
         btn.addEventListener("click",addExpenseToTotal);
     </script>
