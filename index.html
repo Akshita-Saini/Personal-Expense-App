@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Expense App</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP" crossorigin="anonymous"> </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
     <style>
 
@@ -12,31 +13,35 @@
 </head>
 <body>
     <nav class="navbar navbar-dark bg-dark bg-gradient">
-        <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1" href="#" aria-current="true">Xpurse</span>
+            <span class="navbar-brand mb-0 p-2 h1" href="#" aria-current="true">Xpurse</span>
             <span class="navbar-brand mb-0 h1 display-3"  id="output"></span>
-        </div>
     </nav>
-    <div class="background container-fluid ">
-        <div class="d-flex align-items-center">
-            <div class="container mt-5">
-                <div class="row justify-content-center">
-                    <div class="col-md-8 col-lg-6 shadow-lg p-3 bg-white rounded">
-                          <div class="input-group mb-1 mt-3">
+    <div class="container-fluid bg-light" style="min-height: 100vh;">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="container">
+                    <div class="jumbotron mt-4 shadow-lg p-3 bg-white rounded">
+                        <div class="input-group mt-3 p-1">
                             <span class="input-group-text" >Rs.</span>
                             <input type="text" id="inputAmt" class="form-control" placeholder="Cost of Item" aria-label="Cost of Item" aria-describedby="Cost of Item">
                           </div>
-                          <div class="input-group mb-3">
+                          <div class="input-group mb-3 p-1">
                             <input type="text" class="form-control" id="inputDesc"  placeholder="Purchased Item" aria-label="Purchased Item" aria-describedby="Purchased Item">
                             <span class="input-group-text" >@</span>
                           </div>
                           <div class="d-grid gap-2">
-                            <button class="btn btn-dark bg-gradient -6" id="addExpenseBtn" type="button">Add Expense</button>
-                          </div>
+                            <button class="btn btn-dark bg-gradient" id="addExpenseBtn" type="button">Add Expense</button>
+                          </div>  
                     </div>
                 </div>
-    
-    <div id="list"></div>
+                <div class="container">
+                    <ul class="list-group mt-4 shadow-lg bg-white rounded" id="list">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+   
     <script>
 
         let totalExpense = 0;
@@ -48,6 +53,53 @@
         output.textContent = "Total Expense : " + totalExpense;
 
         let allExpenses = [];
+
+        function getDate(date)
+        {
+            return date.toLocaleDateString("en-US",{year:'numeric',month:'long',day:'numeric'});
+        }
+   
+        function expenseListItem(item)
+        {
+            return `
+                <li class="list-group-item d-flex justify-content-between p-3">
+							<div class="d-flex flex-column">
+								    ${item.description}
+								<small class="text-muted"> ${getDate(item.moment)} </small>
+							</div>
+							<div>
+								<span class="px-5">
+                                    ${item.amount}
+								</span>
+								<button type="button" id="delete" onclick="deleteItem(${item.moment.valueOf()})" class="btn btn-outline-danger btn-sm">
+									<i class="fas fa-trash-alt" style="font-size:large;"></i>
+								</button>
+							</div>
+						</li>
+                `;
+        }
+
+        function showExpenses(expensesArr)
+        {
+            let outputList = expensesArr.map(expenseItem => {
+                return expenseListItem(expenseItem);
+            });
+
+            let joinedExpensesArr = outputList.join(" ");
+            list.innerHTML=joinedExpensesArr;
+        }
+
+        function deleteItem(toDelete)
+        {
+            let expenseToDelete = allExpenses.find(item => item.moment.valueOf() === toDelete);
+            totalExpense=totalExpense-expenseToDelete.amount;
+            output.textContent="Output :" + totalExpense;
+
+            let alteredAllExpenses = allExpenses.filter(item => 
+                item.moment.valueOf() !== toDelete);
+            showExpenses(alteredAllExpenses);
+        }
+     
         
         function addExpenseToTotal()
         {
@@ -58,17 +110,12 @@
     
             expenseItem.amount=amt;
             expenseItem.description=desc;
+            expenseItem.moment=new Date();
             allExpenses.push(expenseItem);
             totalExpense=totalExpense+amt;
-            console.log(totalExpense);
             output.textContent="Output :" + totalExpense;
-            console.log(allExpenses);
-            let outputList = allExpenses.map(expenseItem => {
-                return `<div>Amount : ${expenseItem.amount} :: Description : ${expenseItem.description}</div>`;
-            });
-            let joinedOutputList = outputList.join(" ");
-            console.log(joinedOutputList);
-            list.innerHTML=joinedOutputList;
+    
+            showExpenses(allExpenses);
         }
         btn.addEventListener("click",addExpenseToTotal);
         
